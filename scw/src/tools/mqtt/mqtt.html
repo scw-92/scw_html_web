@@ -1,0 +1,95 @@
+
+
+		
+		
+<style>
+			#my_temperature {
+			
+				width : 400px;
+				height : 320px;
+				margin : lem;
+			}
+		
+</style>
+	
+	
+<div>
+
+		<div align = "center">
+			<h1> Temperature Data</h1>
+			<div id = "my_temperature" >
+			</div>
+			<button type="button" class="btn btn-success" onclick="func_open(this)" >connect</button>
+			<button type="button" class="btn btn-success" onclick="func_close" >disabled</button>
+		</div>
+		<br></br>
+		<h2>实时数据</h2>
+		<div id = "show_type_date" data-spy="scroll"  data-offset="0" style="height:500px;overflow:auto; position: relative;" >
+		
+		</div>
+		
+		
+		<script>
+			
+			var connect_flags = false;
+			var div = document.getElementById('show_type_date');
+			//show_data("1111","kkkkk");
+			//show_data("1111","kkkkk");
+			//var  mqtt_client  =  new paho.MQTT.Client('aplexyang.mqtt.iot.gz.baidubce.com',8884,"my_device");
+			var mqtt_client = new Paho.MQTT.Client("aplexyang.mqtt.iot.gz.baidubce.com", 8884, "DeviceId-" + Math.random().toString(36).substring(7));
+			//show_data("1111","kkkkk");
+			function func_open(obj){
+				if (connect_flags == true){
+					show_data("connected:","正在通信中，无需多次连接！！！");
+					return ;
+				}
+					
+				mqtt_client.onConnectionLost = onConnectionLost;
+				mqtt_client.onMessageArrived = onMessageArrived;
+				show_data("connecting:","正在连接中，请稍后！！！");
+				mqtt_client.connect({
+					onSuccess:onConnect,
+					onFailure:onError,
+					userName:"aplexyang/testdevice",
+					password:"oAS4hVvFf7TOF7bFL3KWBkdgiW+Kr+F6VzVQ5inNEro=",
+					useSSL:true
+				});
+			}
+			function onConnect(){
+				show_data("onConnect:","ok");
+				mqtt_client.subscribe("helloTopic");
+				show_data("subscribe:","helloTopic");
+				connect_flags = true;
+			}
+			
+			function onError(){
+				show_data("connect:","Error");	
+				connect_flags = false;
+			}
+			
+						function onConnectionLost(responseObject) {
+				if(responseObject.errorCode !==0){
+					show_data("onConnectionLost:",responseObject.errorMessage);
+					connect_flags = false;
+					client = new Paho.MQTT.Client("aplexyang.mqtt.iot.gz.baidubce.com", 8884, "DeviceId-egkn9o");
+					func_open()
+				}
+			}
+			function onMessageArrived(message){
+				show_data("recv_message:",message.payloadString);
+				str_to_json = JSON.parse(message.payloadString);
+				temperature.refresh(str_to_json['value']);
+			}
+			function show_data(type,message){
+				div.innerHTML += "<div style='background : #999;'>" + type + "</div>"
+				div.innerHTML += "<div class='text-success'>"  + message + "</div>";
+			}
+			var temperature = new JustGage({
+				id: "my_temperature",
+				value: 25,
+				min: 0,
+				max: 100,
+				symbol: '℃',
+			});
+		</script>
+	</div>	

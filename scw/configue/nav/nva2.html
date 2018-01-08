@@ -1,0 +1,55 @@
+<ul class="nav navbar-nav" id='nav_ul'>
+		<% var patt_html=/_html/g %> <!--代表点击下拉菜单，加载HTML文件-->
+		<% var patt_url=/netsite/g  %><!--代表点击下拉菜单，跳转到相应的URL处---->
+	
+	<% _.each(nav, (value_e, key_e, list_e) => { %>
+		<li class="dropdown" >
+			<a href="#"  data-toggle="dropdown"><%= _.keys(value_e)[0] %><strong class="caret"></strong></a>
+			<ul class="dropdown-menu">
+			<% _.each(value_e, (value_i, key_i, list_i) => { %>  
+					<% if ( patt_url.test(_.keys(value_e)[0])) { %>
+						<% _.each(value_i, (value_j, key_j,list_j) => { %> 
+						<li>
+							<a href="<%=_.values(value_j)[0] %>"><%=_.keys(value_j)[0]%> </a>
+						<%  }) ; %>
+					<% } else if (patt_html.test(value_i)) { %>
+					<% _.each(value_i, (value_j, key_j) => { %> 
+						<li>
+							<a href="javascript:void(0);" onclick="click_search_html(this)"><%= value_j %></a>
+					<% }) %>
+				<% } else  { %>
+					<% _.each(value_i, (value_j, key_j) => { %> 
+						<li>
+							<a href="javascript:void(0);" onclick="click_search_html(this)"><%= value_j %></a>
+					<% }) %>
+				<% } %>
+				
+			<%
+			});
+			%>
+
+			</ul>
+		</li>
+
+	<%
+	});
+	%>
+</ul>
+
+<ul class="nav navbar-nav navbar-right"><!--规定此元素在导航栏中的位置-->
+	<li class="dropdown"><!--规定下拉菜单的起始标志-->
+		<a href='javascript:void(0);' class ="dropdown-toggle" data-toggle="dropdown">LANGUAGE<b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<li><a href="#" onclick='click_change_language(this)' id='CN'>CN</a></li>
+			<li><a href="#" onclick='click_change_language(this)' id='English'>English</a></li>
+		</ul>
+		
+	</li>
+</ul>
+
+
+
+
+
+
+

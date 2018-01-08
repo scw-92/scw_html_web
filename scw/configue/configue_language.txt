@@ -1,0 +1,8 @@
+{ 
+	"English":"中文",
+	"tools":"工具",
+	"database":"资料库",
+	"netsite":"网络站点",
+	"ftp":"ftp服务",
+	"ssh":"ssh服务"
+}
