@@ -9,3 +9,5 @@
 
 # libwebsockets 库的编译
 将lws_config.h文件中的关于IPV6的宏定义注释掉，重新编译libwebsockets，将该动态库拷贝到开发板
+
+# scw-2018-1-15.tar 是我的板子的web最新版的压缩包
